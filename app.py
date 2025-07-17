@@ -15,6 +15,13 @@ from PIL import Image
 import io
 
 st.title("🐶🐱🐴 VGG16 이미지 분류기")
+st.write("""
+이 이미지 분류기는 sunflower, Blue Rose  분류기에요
+""")
+st.image(["blue_rose.jpg","sunflower.jpg"],
+    caption=["blue_rose","sunflower"],
+    width=300)
+
 
 # 모델 및 클래스 불러오기
 @st.cache_resource
@@ -47,7 +54,14 @@ if uploaded_file is not None:
 
     # 예측
     predictions = model.predict(img_array)
-    predicted_class = class_names[np.argmax(predictions)]
+    max_prob = np.argmax(predictions[0])
+
+    if max_prob <= 0.6:
+        predicted_class = "실패 (신뢰도 낮음)"
+    else:
+        predicted_class = class_names[np.argmax(predictions)]
+
+
 
     st.markdown(f"### ✅ 예측 결과: **{predicted_class}**")
     st.markdown("### 🔢 클래스별 확률")
